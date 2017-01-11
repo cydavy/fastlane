@@ -260,6 +260,8 @@ module Frameit
 
         current_font = font(key)
         text = fetch_text(key)
+        text = format_text(text)
+
         UI.verbose("Using #{current_font} as font the #{key} of #{screenshot.path}") if current_font
         UI.verbose("Adding text '#{text}'")
 
@@ -282,6 +284,23 @@ module Frameit
         results[key] = title_image
       end
       results
+    end
+
+    def format_text(text)
+      formatted_text = ""
+        count = 0
+        words = text.split(" ")
+        for word in words 
+          if word.length + count < fetch_config['max_character_per_line']
+            count += word.length + 1
+            formatted_text += " " + word
+          else
+            formatted_text += "\n" + word
+            count = word.length
+          end
+        end
+
+        return  formatted_text
     end
 
     # Loads the config (colors, background, texts, etc.)
